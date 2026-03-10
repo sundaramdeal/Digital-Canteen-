@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Your Cart</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(180deg,#22d3ee,#10b981);
+color:white;
+text-align:center;
+}
+
+h1{
+padding:20px;
+}
+
+.cartBox{
+padding:20px;
+}
+
+.item{
+
+background:rgba(255,255,255,0.2);
+margin:15px auto;
+padding:15px;
+border-radius:20px;
+width:250px;
+
+}
+
+button{
+
+border:none;
+padding:6px 12px;
+border-radius:20px;
+margin:5px;
+cursor:pointer;
+
+}
+
+.qty{
+
+font-size:18px;
+margin:0 10px;
+
+}
+
+.total{
+
+font-size:20px;
+margin:20px;
+
+}
+
+.order{
+
+background:orange;
+padding:10px 20px;
+font-size:18px;
+
+}
+
+.back{
+
+margin-top:20px;
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🛒 Your Cart</h1>
+
+<div class="cartBox" id="cartItems"></div>
+
+<div class="total" id="total"></div>
+
+<button class="order" onclick="order()">Place Order</button>
+
+<div class="back" onclick="goHome()">⬅ Back to Home</div>
+
+<script>
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+function showCart(){
+
+let data=""
+let total=0
+
+cart.forEach((e,i)=>{
+
+total += e.price * e.qty
+
+data += `
+
+<div class="item">
+
+<h3>${e.name}</h3>
+
+<p>₹${e.price}</p>
+
+<button onclick="dec(${i})">-</button>
+
+<span class="qty">${e.qty}</span>
+
+<button onclick="inc(${i})">+</button>
+
+</div>
+
+`
+
+})
+
+document.getElementById("cartItems").innerHTML=data
+
+document.getElementById("total").innerHTML="Total: ₹"+total
+
+}
+
+showCart()
+
+function save(){
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+showCart()
+
+}
+
+function inc(i){
+
+cart[i].qty++
+
+save()
+
+}
+
+function dec(i){
+
+cart[i].qty--
+
+if(cart[i].qty<=0){
+
+cart.splice(i,1)
+
+}
+
+save()
+
+}
+
+function order(){
+
+let user = JSON.parse(localStorage.getItem("user"))
+
+if(!user){
+
+alert("Please create user ID first")
+
+location.href="user.html"
+
+return
+
+}
+
+location.href="checkout.html"
+
+}
+
+function goHome(){
+
+location.href="home.html"
+
+}
+
+</script>
+
+</body>
+
+</html>

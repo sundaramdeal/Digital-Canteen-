@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Digital Canteen</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(180deg,#22d3ee,#10b981);
+color:white;
+text-align:center;
+}
+
+.topbar{
+padding:15px;
+font-size:20px;
+font-weight:bold;
+background:rgba(0,0,0,0.2);
+}
+
+.hero{
+padding:30px;
+}
+
+.hero h1{
+font-size:40px;
+background:linear-gradient(90deg,yellow,orange,pink);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+.search{
+width:80%;
+padding:12px;
+border:none;
+border-radius:25px;
+margin-top:20px;
+font-size:16px;
+}
+
+.categories{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.cat{
+border:1px solid white;
+padding:8px 15px;
+border-radius:20px;
+margin:5px;
+cursor:pointer;
+}
+
+.products{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+margin-top:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.2);
+width:160px;
+padding:20px;
+margin:10px;
+border-radius:20px;
+}
+
+button{
+border:none;
+padding:6px 12px;
+border-radius:20px;
+margin:5px;
+cursor:pointer;
+}
+
+.add{
+background:orange;
+font-weight:bold;
+}
+
+.qty{
+font-size:18px;
+margin:0 10px;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+background:rgba(0,0,0,0.3);
+display:flex;
+justify-content:space-around;
+padding:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbar">🛍 Digital Canteen</div>
+
+<div class="hero">
+
+<h1>Welcome to Digital Canteen</h1>
+
+<p>Order your favorite food online easily</p>
+
+<input class="search" id="search" placeholder="Search your food..." onkeyup="searchFood()">
+
+</div>
+
+<div class="categories">
+
+<div class="cat" onclick="filter('All')">All</div>
+<div class="cat" onclick="filter('Burger')">Burger</div>
+<div class="cat" onclick="filter('Pizza')">Pizza</div>
+<div class="cat" onclick="filter('Drinks')">Drinks</div>
+<div class="cat" onclick="filter('Snacks')">Snacks</div>
+<div class="cat" onclick="filter('Chocolate')">Chocolate</div>
+
+</div>
+
+<div class="products" id="products"></div>
+
+<div class="bottom">
+<div>🏠 Home</div>
+<div onclick="location.href='cart.html'">🛒 Cart</div>
+<div onclick="location.href='orders.html'">📦 Orders</div>
+<div onclick="location.href='user.html'">👤 You</div>
+</div>
+
+<script>
+
+let items=[
+
+{
+id:1,
+name:"Veg Burger",
+price:40,
+cat:"Burger",
+desc:"Tasty veg burger"
+},
+
+{
+id:2,
+name:"Cheese Pizza",
+price:80,
+cat:"Pizza",
+desc:"Cheesy pizza"
+},
+
+{
+id:3,
+name:"Cold Drink",
+price:30,
+cat:"Drinks",
+desc:"Chilled drink"
+},
+{
+id:4,
+name:"Chocolate",
+price:20,
+cat:"Chocolate",
+desc:"Mast aur Good chocolate"
+},
+
+]
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+function getQty(id){
+
+let item = cart.find(x=>x.id==id)
+
+return item ? item.qty : 0
+
+}
+
+function show(list){
+
+let data=""
+
+list.forEach(e=>{
+
+let q = getQty(e.id)
+
+data+=`
+
+<div class="card">
+
+<h3 onclick="openProduct(${e.id})">${e.name}</h3>
+
+<p>₹${e.price}</p>
+
+<div id="cart${e.id}">
+
+${q==0 ?
+
+`<button class="add" onclick="add(${e.id})">Add to Cart</button>`
+
+:
+
+`<button onclick="dec(${e.id})">-</button>
+<span class="qty">${q}</span>
+<button onclick="inc(${e.id})">+</button>`
+
+}
+
+</div>
+
+</div>
+
+`
+
+})
+
+document.getElementById("products").innerHTML=data
+
+}
+
+show(items)
+
+function save(){
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+show(items)
+
+}
+
+function add(id){
+
+let item = cart.find(x=>x.id==id)
+
+if(item){
+
+item.qty++
+
+}else{
+
+let food = items.find(x=>x.id==id)
+
+cart.push({...food,qty:1})
+
+}
+
+save()
+
+}
+
+function inc(id){
+
+let item = cart.find(x=>x.id==id)
+
+item.qty++
+
+save()
+
+}
+
+function dec(id){
+
+let item = cart.find(x=>x.id==id)
+
+item.qty--
+
+if(item.qty<=0){
+
+cart = cart.filter(x=>x.id!=id)
+
+}
+
+save()
+
+}
+
+function openProduct(id){
+
+localStorage.setItem("product",id)
+
+location.href="product.html"
+
+}
+
+function filter(cat){
+
+if(cat=="All"){
+
+show(items)
+
+}else{
+
+let f = items.filter(x=>x.cat==cat)
+
+show(f)
+
+}
+
+}
+
+function searchFood(){
+
+let s = document.getElementById("search").value.toLowerCase()
+
+let f = items.filter(x=>x.name.toLowerCase().includes(s))
+
+show(f)
+
+}
+
+</script>
+
+</body>
+</html>

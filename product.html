@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Food Details</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(180deg,#22d3ee,#10b981);
+color:white;
+text-align:center;
+padding:30px;
+}
+
+.box{
+background:rgba(255,255,255,0.2);
+padding:30px;
+border-radius:20px;
+width:300px;
+margin:auto;
+}
+
+button{
+border:none;
+padding:8px 15px;
+border-radius:20px;
+margin:5px;
+cursor:pointer;
+}
+
+.qty{
+font-size:20px;
+margin:0 10px;
+}
+
+.back{
+margin-bottom:20px;
+display:inline-block;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="back" onclick="goBack()">⬅ Back</div>
+
+<div class="box">
+
+<h1 id="name"></h1>
+
+<p id="price"></p>
+
+<p id="desc"></p>
+
+<div id="cartArea"></div>
+
+</div>
+
+<script>
+
+let items=[
+
+{
+id:1,
+name:"Veg Burger",
+price:40,
+cat:"Burger",
+desc:"Tasty veg burger"
+},
+{
+name:"Toffee",
+price:10,
+cat:"Toffee",
+desc:"Tasty and sweet dreams",
+qty:0
+},
+
+{
+id:2,
+name:"Cheese Pizza",
+price:80,
+cat:"Pizza",
+desc:"Cheesy pizza"
+},
+
+{
+id:3,
+name:"Cold Drink",
+price:30,
+cat:"Drinks",
+desc:"Chilled drink"
+},
+{
+id:4,
+name:"Chocolate",
+price:20,
+cat:"Chocolate",
+desc:"Mast aur Good chocolate"
+},
+
+]
+
+let id = localStorage.getItem("product")
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+let item = items.find(x=>x.id==id)
+
+document.getElementById("name").innerText=item.name
+document.getElementById("price").innerText="₹"+item.price
+document.getElementById("desc").innerText=item.desc
+
+function getQty(){
+
+let c = cart.find(x=>x.id==id)
+
+return c ? c.qty : 0
+
+}
+
+function show(){
+
+let q = getQty()
+
+if(q==0){
+
+document.getElementById("cartArea").innerHTML=
+
+`<button onclick="add()">Add to Cart</button>`
+
+}else{
+
+document.getElementById("cartArea").innerHTML=
+
+`
+<button onclick="dec()">-</button>
+<span class="qty">${q}</span>
+<button onclick="inc()">+</button>
+`
+
+}
+
+}
+
+show()
+
+function save(){
+
+localStorage.setItem("cart",JSON.stringify(cart))
+
+show()
+
+}
+
+function add(){
+
+cart.push({...item,qty:1})
+
+save()
+
+}
+
+function inc(){
+
+let c = cart.find(x=>x.id==id)
+
+c.qty++
+
+save()
+
+}
+
+function dec(){
+
+let c = cart.find(x=>x.id==id)
+
+c.qty--
+
+if(c.qty<=0){
+
+cart = cart.filter(x=>x.id!=id)
+
+}
+
+save()
+
+}
+
+function goBack(){
+
+location.href="home.html"
+
+}
+
+</script>
+
+</body>
+</html>

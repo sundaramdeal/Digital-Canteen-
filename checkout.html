@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Checkout</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+}
+
+.header{
+background:#ff6f00;
+color:white;
+padding:15px;
+text-align:center;
+font-size:20px;
+}
+
+.container{
+padding:20px;
+margin-bottom:70px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+background:#ff6f00;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
+}
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:12px 0;
+box-shadow:0 -2px 6px rgba(0,0,0,0.2);
+}
+
+.bottom-nav a{
+text-decoration:none;
+color:#333;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+Checkout
+</div>
+
+<div class="container">
+
+<div class="box">
+
+<h3>Delivery Details</h3>
+
+<input id="name" placeholder="Name">
+
+<input id="phone" placeholder="Phone">
+
+<input id="address" placeholder="Address">
+
+<button onclick="placeOrder()">Place Order</button>
+
+</div>
+
+</div>
+
+<div class="bottom-nav">
+<a href="home.html">Home</a>
+<a href="cart.html">Cart</a>
+<a href="orders.html">Orders</a>
+<a href="user.html">User</a>
+</div>
+
+<script>
+
+function placeOrder(){
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+let name = document.getElementById("name").value
+let phone = document.getElementById("phone").value
+let address = document.getElementById("address").value
+
+if(cart.length==0){
+alert("Cart empty")
+return
+}
+
+let order={
+id:Date.now(),
+name:name,
+phone:phone,
+address:address,
+items:cart,
+status:"Ordered"
+}
+
+let orders = JSON.parse(localStorage.getItem("orders")) || []
+
+orders.unshift(order)
+
+if(orders.length>30){
+orders.pop()
+}
+
+localStorage.setItem("orders",JSON.stringify(orders))
+
+let msg="NEW ORDER %0A"
+
+cart.forEach(i=>{
+msg+=i.name+" x "+i.qty+"%0A"
+})
+
+msg+="%0AName:"+name+"%0APhone:"+phone+"%0AAddress:"+address
+
+window.open("https://wa.me/916393884280?text="+msg)
+
+localStorage.removeItem("cart")
+
+window.location.href="orders.html"
+
+}
+
+</script>
+
+</body>
+</html>

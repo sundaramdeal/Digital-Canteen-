@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>User Profile</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(180deg,#22d3ee,#10b981);
+color:white;
+text-align:center;
+padding:40px;
+}
+
+input{
+
+display:block;
+margin:10px auto;
+padding:10px;
+width:250px;
+border:none;
+border-radius:10px;
+
+}
+
+button{
+
+padding:10px 20px;
+border:none;
+border-radius:20px;
+background:orange;
+cursor:pointer;
+
+}
+
+.box{
+
+background:rgba(255,255,255,0.2);
+padding:30px;
+border-radius:20px;
+width:300px;
+margin:auto;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>User Profile</h2>
+
+<div id="form">
+
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<input id="address" placeholder="Address">
+
+<button onclick="saveUser()">Create ID</button>
+
+</div>
+
+<div id="profile"></div>
+
+</div>
+
+<script>
+
+let user = JSON.parse(localStorage.getItem("user"))
+
+function show(){
+
+if(user){
+
+document.getElementById("form").style.display="none"
+
+document.getElementById("profile").innerHTML=
+
+`
+<h3>${user.name}</h3>
+<p>${user.phone}</p>
+<p>${user.address}</p>
+<button onclick="logout()">Logout</button>
+`
+
+}
+
+}
+
+show()
+
+function saveUser(){
+
+let name=document.getElementById("name").value
+let phone=document.getElementById("phone").value
+let address=document.getElementById("address").value
+
+if(!name || !phone || !address){
+
+alert("Fill all details")
+
+return
+
+}
+
+let userData={
+
+name:name,
+phone:phone,
+address:address
+
+}
+
+localStorage.setItem("user",JSON.stringify(userData))
+
+location.reload()
+
+}
+
+function logout(){
+
+localStorage.removeItem("user")
+
+location.reload()
+
+}
+
+</script>
+
+</body>
+
+</html>
